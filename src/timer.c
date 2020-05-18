@@ -59,6 +59,7 @@ int uv_timer_init(uv_loop_t* loop, uv_timer_t* handle) {
   uv__handle_init(loop, (uv_handle_t*)handle, UV_TIMER);
   handle->timer_cb = NULL;
   handle->repeat = 0;
+  handle->ref_time = 0;
   return 0;
 }
 
@@ -92,6 +93,13 @@ int uv_timer_start(uv_timer_t* handle,
 
   return 0;
 }
+int uv_period_timer_start(uv_timer_t* handle,
+                             uv_timer_cb cb,
+                             uint64_t timeout,
+                             uint64_t repeat) {
+  handle->ref_time = uv_hrtime() / 1000000 + timeout;
+  return uv_timer_start(handle, cb, timeout, repeat);
+}
 
 
 int uv_timer_stop(uv_timer_t* handle) {
@@ -108,12 +116,17 @@ int uv_timer_stop(uv_timer_t* handle) {
 
 
 int uv_timer_again(uv_timer_t* handle) {
+  uint64_t delta_time;
   if (handle->timer_cb == NULL)
     return UV_EINVAL;
 
   if (handle->repeat) {
     uv_timer_stop(handle);
-    uv_timer_start(handle, handle->timer_cb, handle->repeat, handle->repeat);
+	
+    handle->ref_time = handle->ref_time + handle->repeat;
+    delta_time = handle->ref_time - handle->loop->time;
+    uv_timer_start(handle, handle->timer_cb, delta_time, handle->repeat);
+
   }
 
   return 0;

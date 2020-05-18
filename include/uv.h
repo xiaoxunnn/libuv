@@ -859,6 +859,10 @@ UV_EXTERN int uv_timer_start(uv_timer_t* handle,
                              uv_timer_cb cb,
                              uint64_t timeout,
                              uint64_t repeat);
+int uv_period_timer_start(uv_timer_t* handle,
+                             uv_timer_cb cb,
+                             uint64_t timeout,
+                             uint64_t repeat);
 UV_EXTERN int uv_timer_stop(uv_timer_t* handle);
 UV_EXTERN int uv_timer_again(uv_timer_t* handle);
 UV_EXTERN void uv_timer_set_repeat(uv_timer_t* handle, uint64_t repeat);

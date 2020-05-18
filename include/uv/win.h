@@ -545,6 +545,7 @@ typedef struct {
   int unused;                                                                 \
   uint64_t timeout;                                                           \
   uint64_t repeat;                                                            \
+  uint64_t ref_time;                                                          \
   uint64_t start_id;                                                          \
   uv_timer_cb timer_cb;
 

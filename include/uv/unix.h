@@ -332,6 +332,7 @@ typedef struct {
   void* heap_node[3];                                                         \
   uint64_t timeout;                                                           \
   uint64_t repeat;                                                            \
+  uint64_t ref_time;                                                          \
   uint64_t start_id;
 
 #define UV_GETADDRINFO_PRIVATE_FIELDS                                         \
